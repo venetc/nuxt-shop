@@ -14,7 +14,7 @@ export function useDBClient() {
 
   if (!import.meta.dev && !tursoDbToken || !tursoDbUrl) throw new Error('Missing tursoDbToken or tursoDbUrl')
 
-  if (!_db) _db = import.meta.dev ? generateLocalDB() : generateRemoteDB(tursoDbToken, tursoDbUrl)
+  if (!_db) _db = import.meta.dev ? generateLocalDB() : generateRemoteDB(tursoDbUrl, tursoDbToken)
 
   return _db
 }
