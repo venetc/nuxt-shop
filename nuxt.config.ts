@@ -4,9 +4,9 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', 'shadcn-nuxt', '@nuxt/test-utils/module', 'nuxt-icon', '@vueuse/nuxt'],
   typescript: { shim: false },
   runtimeConfig: {
-    tursoDbUrl: '',
-    tursoDbToken: '',
-    seedToken: '',
+    tursoDbUrl: process.env.NUXT_TURSO_DB_URL,
+    tursoDbToken: process.env.NUXT_TURSO_DB_TOKEN,
+    seedToken: process.env.NUXT_SEED_TOKEN,
   },
   shadcn: { prefix: 'Shared', componentDir: './shared/ui' },
   components: [
