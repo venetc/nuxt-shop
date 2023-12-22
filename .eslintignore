@@ -1,0 +1,7 @@
+.nuxt
+dist
+node_modules
+schema
+**/*.tmpl.*
+sw.js
+**/*.json
