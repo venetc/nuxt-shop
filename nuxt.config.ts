@@ -3,7 +3,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', 'shadcn-nuxt', '@nuxt/test-utils/module', 'nuxt-icon', '@vueuse/nuxt'],
   typescript: { shim: false },
-  runtimeConfig: { tursoDbUrl: '', tursoDbToken: '', seedToken: '' },
+  runtimeConfig: {
+    tursoDbUrl: '',
+    tursoDbToken: '',
+    seedToken: '',
+  },
   shadcn: { prefix: 'Shared', componentDir: './shared/ui' },
   components: [
     {
