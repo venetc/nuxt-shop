@@ -1,5 +1,5 @@
 import { createClient as createLocalClient } from '@libsql/client'
-import { createClient as createLibSQLClient } from '@libsql/client/web'
+import { createClient as createLibSQLClient } from '@libsql/client/http'
 import { drizzle } from 'drizzle-orm/libsql'
 
 import type { LibSQLDatabase } from 'drizzle-orm/libsql'
