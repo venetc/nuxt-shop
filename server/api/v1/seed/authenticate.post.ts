@@ -7,5 +7,5 @@ export default defineEventHandler(async (event) => {
 
   if (secret !== token) return createError({ statusCode: 401, statusMessage: 'Invalid token' })
 
-  return { status: 'ok' }
+  return { status: 'ok', xxx: `${process.env.CLOUDFLARE_TURSO_DB_URL} ${process.env.CLOUDFLARE_TURSO_DB_TOKEN}` }
 })
