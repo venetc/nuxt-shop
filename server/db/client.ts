@@ -9,7 +9,8 @@ import * as schema from '@/server/db/schema'
 let _db: LibSQLDatabase<typeof schema> | null = null
 
 export function useDBClient() {
-  const { tursoDbToken, tursoDbUrl } = useRuntimeConfig()
+  const tursoDbUrl = process.env.CLOUDFLARE_TURSO_DB_URL ?? useRuntimeConfig().tursoDbUrl
+  const tursoDbToken = process.env.CLOUDFLARE_TURSO_DB_TOKEN ?? useRuntimeConfig().tursoDbToken
 
   if (!import.meta.dev && !tursoDbToken || !tursoDbUrl) throw new Error('Missing tursoDbToken or tursoDbUrl')
 
