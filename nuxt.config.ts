@@ -1,7 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    pageTransition: { name: 'fade', mode: 'out-in' },
+    layoutTransition: { name: 'fade', mode: 'out-in' },
+  },
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', 'shadcn-nuxt', '@nuxt/test-utils/module', 'nuxt-icon', '@vueuse/nuxt'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-fonts',
+    'shadcn-nuxt',
+    '@nuxt/test-utils/module',
+    'nuxt-icon',
+    '@vueuse/nuxt',
+  ],
   typescript: { shim: false },
   runtimeConfig: {
     tursoDbUrl: process.env.NUXT_TURSO_DB_URL,
@@ -17,6 +28,12 @@ export default defineNuxtConfig({
       prefix: 'Shared',
     },
     {
+      path: '~/entities',
+      extensions: ['.vue'],
+      pathPrefix: true,
+      prefix: 'Entity',
+    },
+    {
       path: '~/features',
       extensions: ['.vue'],
       pathPrefix: true,
@@ -28,15 +45,14 @@ export default defineNuxtConfig({
       pathPrefix: true,
       prefix: 'Widget',
     },
-    {
-      path: '~/entities',
-      extensions: ['.vue'],
-      pathPrefix: true,
-      prefix: 'Entity',
-    },
   ],
   imports: {
-    dirs: ['shared/**', 'features/**', 'widgets/**', 'entities/**'],
+    dirs: [
+      'shared/**',
+      'entities/**',
+      'features/**',
+      'widgets/**',
+    ],
   },
   googleFonts: {
     display: 'swap',

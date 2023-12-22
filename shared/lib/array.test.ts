@@ -5,10 +5,9 @@ import { describe, expect, it } from 'vitest'
 describe('getLoopedIndexItem', () => {
   it('should return the item at the lookup index in the target array', () => {
     const targetArray = [1, 2, 3, 4, 5]
-    expect(getLoopedIndexItem(0, targetArray)).toBe(1)
-    expect(getLoopedIndexItem(2, targetArray)).toBe(3)
-    expect(getLoopedIndexItem(4, targetArray)).toBe(5)
     expect(getLoopedIndexItem(6, targetArray)).toBe(2)
+    expect(getLoopedIndexItem(7, targetArray)).toBe(3)
+    expect(getLoopedIndexItem(8, targetArray)).toBe(4)
   })
 })
 
