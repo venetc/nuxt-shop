@@ -20,6 +20,7 @@ logs
 
 # DB
 server/db/migrations/
+server/db/migrations/meta
 server/db/local.db
 server/db/local.sqlite
 
