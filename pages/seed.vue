@@ -13,21 +13,21 @@ function useSeeder(table: Tables) {
 }
 
 const tables = [
-  { name: 'Brands', seeder: useSeeder('brands') },
+  { name: 'Categories', seeder: useSeeder('categories') },
   { name: 'Colors', seeder: useSeeder('colors') },
-  { name: 'Models', seeder: useSeeder('models') },
+  { name: 'Products', seeder: useSeeder('products') },
   { name: 'Sizes', seeder: useSeeder('sizes') },
-  { name: 'Colors of Models', seeder: useSeeder('colors_of_models') },
-  { name: 'Sizes of Models', seeder: useSeeder('sizes_of_models') },
+  { name: 'Colors of Products', seeder: useSeeder('colors_of_products') },
+  { name: 'Sizes of Products', seeder: useSeeder('sizes_of_products') },
 ]
-
-async function seedAll() {
-  for (const table of tables) await table.seeder.execute()
-}
 
 const someIdle = computed(() => tables.some(table => table.seeder.status.value === 'idle'))
 const somePending = computed(() => tables.some(table => table.seeder.status.value === 'pending'))
 const someHasErrors = computed(() => tables.some(table => table.seeder.status.value === 'error'))
+
+async function seedAll() {
+  for (const table of tables) await table.seeder.execute()
+}
 
 const isPasswordVisible = ref(false)
 

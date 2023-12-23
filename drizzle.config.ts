@@ -6,6 +6,6 @@ const [authToken = '', url = ''] = [process.env.NUXT_TURSO_DB_TOKEN, process.env
 export default {
   out: 'server/db/migrations',
   schema: 'server/db/schema.ts',
-  driver: env === 'development' ? 'libsql' : 'turso',
-  dbCredentials: env === 'development' ? { url: 'file:server/db/local.db' } : { url, authToken },
+  driver: env === 'production' ? 'turso' : 'libsql',
+  dbCredentials: env === 'production' ? { url, authToken } : { url: 'file:server/db/local.sqlite' },
 } satisfies Config

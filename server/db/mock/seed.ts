@@ -4,12 +4,12 @@ import * as schema from '../schema'
 
 import type { DBClient } from '../client'
 
-export async function seedBrands(db: DBClient) {
-  await db.delete(schema.brands).execute()
+export async function seedСategories(db: DBClient) {
+  await db.delete(schema.categories).execute()
 
   const generatedData = await useGeneratedData()
 
-  return await db.insert(schema.brands).values(generatedData.brands).returning().all()
+  return await db.insert(schema.categories).values(generatedData.categories).returning().all()
 }
 
 export async function seedColors(db: DBClient) {
@@ -20,16 +20,16 @@ export async function seedColors(db: DBClient) {
   return await db.insert(schema.colors).values(generatedData.colors).returning().all()
 }
 
-export async function seedModels(db: DBClient) {
-  await db.delete(schema.models).execute()
+export async function seedProducts(db: DBClient) {
+  await db.delete(schema.products).execute()
 
   const generatedData = await useGeneratedData()
 
-  const brands = await db.select({ id: schema.brands.id }).from(schema.brands).all()
+  const categories = await db.select({ id: schema.categories.id }).from(schema.categories).all()
 
-  const mappedModelsToBrands = generatedData.mapModelsToBrands(brands)
+  const mappedProductsToCategories = generatedData.mapProductsToCategories(categories)
 
-  return await db.insert(schema.models).values(mappedModelsToBrands).returning().all()
+  return await db.insert(schema.products).values(mappedProductsToCategories).returning().all()
 }
 
 export async function seedSizes(db: DBClient) {
@@ -40,27 +40,27 @@ export async function seedSizes(db: DBClient) {
   return await db.insert(schema.sizes).values(generatedData.sizes).returning().all()
 }
 
-export async function seedColorsOfModels(db: DBClient) {
-  await db.delete(schema.colorsOfModels).execute()
+export async function seedColorsOfProducts(db: DBClient) {
+  await db.delete(schema.colorsOfProducts).execute()
 
   const generatedData = await useGeneratedData()
 
-  const models = await db.select({ id: schema.models.id, image: schema.models.image }).from(schema.models).all()
+  const products = await db.select({ id: schema.products.id, image: schema.products.image }).from(schema.products).all()
   const colors = await db.select().from(schema.colors).all()
 
-  const mappedColorsToModels = generatedData.mapColorsToModels(models, colors)
+  const mappedColorsToProducts = generatedData.mapColorsToProducts(products, colors)
 
-  return await db.insert(schema.colorsOfModels).values(mappedColorsToModels).execute()
+  return await db.insert(schema.colorsOfProducts).values(mappedColorsToProducts).execute()
 }
-export async function seedSizesOfModels(db: DBClient) {
-  await db.delete(schema.sizesOfModels).execute()
+export async function seedSizesOfProducts(db: DBClient) {
+  await db.delete(schema.sizesOfProducts).execute()
 
   const generatedData = await useGeneratedData()
 
-  const models = await db.select({ id: schema.models.id }).from(schema.models).all()
+  const products = await db.select({ id: schema.products.id }).from(schema.products).all()
   const sizes = await db.select({ id: schema.sizes.id }).from(schema.sizes).all()
 
-  const mappedSizesToModels = generatedData.mapSizesToModels(models, sizes)
+  const mappedSizesToProducts = generatedData.mapSizesToProducts(products, sizes)
 
-  return await db.insert(schema.sizesOfModels).values(mappedSizesToModels).execute()
+  return await db.insert(schema.sizesOfProducts).values(mappedSizesToProducts).execute()
 }

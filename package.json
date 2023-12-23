@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "migrate": "drizzle-kit generate:sqlite",
+    "migrate:prepare": "drizzle-kit generate:sqlite",
     "migrate:dev": "MIGRATE_ENV=development tsx server/db/migrate.ts",
     "migrate:prod": "MIGRATE_ENV=production tsx server/db/migrate.ts",
     "studio": "drizzle-kit studio",

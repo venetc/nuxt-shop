@@ -18,6 +18,11 @@ logs
 .fleet
 .idea
 
+# DB
+server/db/migrations/
+server/db/local.db
+server/db/local.sqlite
+
 # Local env files
 .env
 .env.*

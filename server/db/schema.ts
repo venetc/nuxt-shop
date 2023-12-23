@@ -1,9 +1,9 @@
 import { relations } from 'drizzle-orm'
 import { int, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
-export type Tables = 'brands' | 'colors' | 'models' | 'sizes' | 'colors_of_models' | 'sizes_of_models'
+export type Tables = 'categories' | 'colors' | 'products' | 'sizes' | 'colors_of_products' | 'sizes_of_products'
 
-export const brands = sqliteTable('brands', {
+export const categories = sqliteTable('categories', {
   id: int('id').primaryKey({ autoIncrement: true }),
   name: text('name').unique().notNull(),
 })
@@ -13,7 +13,7 @@ export const colors = sqliteTable('colors', {
   hex: text('hex').unique().notNull(),
 })
 
-export const models = sqliteTable('models', {
+export const products = sqliteTable('products', {
   id: int('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   description: text('description').notNull(),
@@ -22,7 +22,7 @@ export const models = sqliteTable('models', {
   discountPrice: int('discount_price'),
   image: text('image').notNull(),
   slug: text('slug').unique().notNull(),
-  brandId: int('brand_id'),
+  categoryId: int('category_id').notNull().references(() => categories.id, { onDelete: 'cascade' }),
   rating: int('rating'),
   sortIndex: int('sort_index').notNull().default(0),
 })
@@ -32,68 +32,68 @@ export const sizes = sqliteTable('sizes', {
   size: int('size').notNull(),
 })
 
-export const colorsOfModels = sqliteTable('colors_of_models', {
-  modelId: int('model_id').notNull().references(() => models.id, { onDelete: 'cascade' }),
+export const colorsOfProducts = sqliteTable('colors_of_products', {
+  productId: int('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
   colorId: int('color_id').notNull().references(() => colors.id, { onDelete: 'cascade' }),
-}, ({ modelId, colorId }) => ({
-  pk: primaryKey({ columns: [modelId, colorId] }),
+}, ({ productId, colorId }) => ({
+  pk: primaryKey({ columns: [productId, colorId] }),
 }))
 
-export const sizesOfModels = sqliteTable('sizes_of_models', {
-  modelId: int('model_id').notNull().references(() => models.id, { onDelete: 'cascade' }),
+export const sizesOfProducts = sqliteTable('sizes_of_products', {
+  productId: int('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
   sizeId: int('size_id').notNull().references(() => sizes.id, { onDelete: 'cascade' }),
-}, ({ modelId, sizeId }) => ({
-  pk: primaryKey({ columns: [modelId, sizeId] }),
+}, ({ productId, sizeId }) => ({
+  pk: primaryKey({ columns: [productId, sizeId] }),
 }))
 
 export const colorsRelations = relations(colors, ({ many }) => ({
-  models: many(colorsOfModels),
+  products: many(colorsOfProducts),
 }))
 
 export const sizesRelations = relations(sizes, ({ many }) => ({
-  models: many(sizesOfModels),
+  products: many(sizesOfProducts),
 }))
 
-export const brandsRelations = relations(brands, ({ many }) => ({
-  models: many(models),
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  products: many(products),
 }))
 
-export const modelsRelations = relations(models, ({ one, many }) => ({
-  brand: one(brands, {
-    fields: [models.brandId],
-    references: [brands.id],
+export const productsRelations = relations(products, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [products.categoryId],
+    references: [categories.id],
   }),
-  colors: many(colorsOfModels),
-  sizes: many(sizesOfModels),
+  colors: many(colorsOfProducts),
+  sizes: many(sizesOfProducts),
 }))
 
-export const colorsOfModelsRelations = relations(colorsOfModels, ({ one }) => ({
-  model: one(models, {
-    fields: [colorsOfModels.modelId],
-    references: [models.id],
+export const colorsOfProductsRelations = relations(colorsOfProducts, ({ one }) => ({
+  product: one(products, {
+    fields: [colorsOfProducts.productId],
+    references: [products.id],
   }),
   color: one(colors, {
-    fields: [colorsOfModels.colorId],
+    fields: [colorsOfProducts.colorId],
     references: [colors.id],
   }),
 }))
 
-export const sizesOfModelsRelations = relations(sizesOfModels, ({ one }) => ({
-  model: one(models, {
-    fields: [sizesOfModels.modelId],
-    references: [models.id],
+export const sizesOfProductsRelations = relations(sizesOfProducts, ({ one }) => ({
+  product: one(products, {
+    fields: [sizesOfProducts.productId],
+    references: [products.id],
   }),
   size: one(sizes, {
-    fields: [sizesOfModels.sizeId],
+    fields: [sizesOfProducts.sizeId],
     references: [sizes.id],
   }),
 }))
 
-export type ModelInsert = typeof models.$inferInsert
-export type ModelSelect = typeof models.$inferSelect
+export type ProductsInsert = typeof products.$inferInsert
+export type ProductsSelect = typeof products.$inferSelect
 
-export type BrandInsert = typeof brands.$inferInsert
-export type BrandSelect = typeof brands.$inferSelect
+export type CategoriesInsert = typeof categories.$inferInsert
+export type CategoriesSelect = typeof categories.$inferSelect
 
 export type ColorInsert = typeof colors.$inferInsert
 export type ColorSelect = typeof colors.$inferSelect
@@ -101,8 +101,8 @@ export type ColorSelect = typeof colors.$inferSelect
 export type SizeInsert = typeof sizes.$inferInsert
 export type SizeSelect = typeof sizes.$inferSelect
 
-export type SizesOfModelInsert = typeof sizesOfModels.$inferInsert
-export type SizesOfModelSelect = typeof sizesOfModels.$inferSelect
+export type SizesOfModelInsert = typeof sizesOfProducts.$inferInsert
+export type SizesOfModelSelect = typeof sizesOfProducts.$inferSelect
 
-export type ColorsOfModelInsert = typeof colorsOfModels.$inferInsert
-export type ColorsOfModelSelect = typeof colorsOfModels.$inferSelect
+export type ColorsOfProductsInsert = typeof colorsOfProducts.$inferInsert
+export type ColorsOfProductsSelect = typeof colorsOfProducts.$inferSelect

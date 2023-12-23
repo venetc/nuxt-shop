@@ -22,8 +22,8 @@ export function useDBClient() {
 export type DBClient = ReturnType<typeof useDBClient>
 
 export function generateLocalDB() {
-  const sqlite = createLocalClient({ url: 'file:server/db/local.db' })
-  return drizzle(sqlite, { logger: false, schema })
+  const sqlite = createLocalClient({ url: 'file:server/db/local.sqlite' })
+  return drizzle(sqlite, { logger: true, schema })
 }
 
 export function generateRemoteDB(url: string, authToken: string) {

@@ -1,4 +1,4 @@
-import type { BrandInsert, ColorInsert, ColorSelect, ModelInsert, ModelSelect, SizeInsert, SizeSelect } from '../schema'
+import type { CategoriesInsert, CategoriesSelect, ColorInsert, ColorSelect, ProductsInsert, ProductsSelect, SizeInsert, SizeSelect } from '../schema'
 
 import { getLoopedIndexItem, sample, shuffleInPlace } from '~/shared/lib/array'
 import { maybeValue, randomFloatInclusive, randomNumberInRangeInclusive } from '~/shared/lib/random'
@@ -8,21 +8,21 @@ import { toSlug } from '~/shared/lib/string'
 export async function useGeneratedData() {
   const { default: jsonDescriptions } = await import('./json/descriptions.json', { assert: { type: 'json' } })
   const { default: jsonSizes } = await import('./json/sizes.json', { assert: { type: 'json' } })
-  const { default: jsonModels } = await import('./json/models.json', { assert: { type: 'json' } })
-  const { default: jsonBrands } = await import('./json/brands.json', { assert: { type: 'json' } })
+  const { default: jsonProducts } = await import('./json/models.json', { assert: { type: 'json' } })
+  const { default: jsonCategories } = await import('./json/brands.json', { assert: { type: 'json' } })
   const { default: jsonGroups } = await import('./json/groups.json', { assert: { type: 'json' } })
   const { default: jsonImages } = await import('./json/images.json', { assert: { type: 'json' } })
   const { default: jsonPostfixes } = await import('./json/postfixes.json', { assert: { type: 'json' } })
-  const indexes = shuffleInPlace(Array.from({ length: jsonModels.length }, (_, index) => index))
+  const indexes = shuffleInPlace(Array.from({ length: jsonProducts.length }, (_, index) => index))
 
   const colors: ColorInsert[] = jsonGroups.map((group: typeof jsonGroups[number]) => ({ hex: group.group_lead_color.hex }))
 
-  const brands: BrandInsert[] = jsonBrands.map((brand: typeof jsonBrands[number]) => ({ name: brand }))
+  const categories: CategoriesInsert[] = jsonCategories.map((category: typeof jsonCategories[number]) => ({ name: category }))
 
   const sizes: SizeInsert[] = jsonSizes.map(({ size }: typeof jsonSizes[number]) => ({ size }))
 
-  const mapModelsToBrands = (brands: Pick<BrandInsert, 'id'>[]) => {
-    const models: ModelInsert[] = jsonModels.map((model: typeof jsonModels[number], index: number) => {
+  const mapProductsToCategories = (categories: Pick<CategoriesSelect, 'id'>[]) => {
+    const products: ProductsInsert[] = jsonProducts.map((product: typeof jsonProducts[number], index: number) => {
       const discountPriceRaw = maybeValue(() => randomNumberInRangeInclusive(2_000, 4_000), { probability: 0.25 })
       const discountPrice = discountPriceRaw ? roundToNearest(discountPriceRaw, 100) : null
       const fullPriceRaw = randomNumberInRangeInclusive(4_500, 10_000)
@@ -31,23 +31,23 @@ export async function useGeneratedData() {
       const rating = maybeValue(() => roundToNearest(randomFloatInclusive(2, 5), 0.5), { probability: 0.75 }) ?? 5
       const description = getLoopedIndexItem(index, jsonDescriptions)
       const image = getLoopedIndexItem(index, jsonImages).image
-      const name = `${model} ${getLoopedIndexItem(index, jsonPostfixes)}`
+      const name = `${product} ${getLoopedIndexItem(index, jsonPostfixes)}`
       const slug = toSlug(name)
       const sortIndex = indexes[index]
-      const brandId = getLoopedIndexItem(index, brands).id
+      const categoryId = getLoopedIndexItem(index, categories).id
 
-      return { description, image, name, rating, stockAmount, discountPrice, fullPrice, slug, sortIndex, brandId }
+      return { description, image, name, rating, stockAmount, discountPrice, fullPrice, slug, sortIndex, categoryId }
     })
 
-    return models
+    return products
   }
 
   /* TODO reafctor to make pure (?) */
-  const mapColorsToModels = (models: Pick<ModelSelect, 'id' | 'image'>[], colors: ColorSelect[]) => {
-    const colorsOfModels: { modelId: ModelSelect['id'], colorId: ColorSelect['id'] }[] = []
+  const mapColorsToProducts = (products: Pick<ProductsSelect, 'id' | 'image'>[], colors: ColorSelect[]) => {
+    const colorsOfProducts: { productId: ProductsSelect['id'], colorId: ColorSelect['id'] }[] = []
 
-    const groupsDict = new Map<ColorSelect['hex'], ModelSelect['image'][]>()
-    const modelsDict = new Map<ModelSelect['image'], ModelSelect['id'][]>()
+    const groupsDict = new Map<ColorSelect['hex'], ProductsSelect['image'][]>()
+    const productsDict = new Map<ProductsSelect['image'], ProductsSelect['id'][]>()
     const colorsDict = new Map<ColorSelect['hex'], ColorSelect['id']>()
 
     for (const group of jsonGroups) {
@@ -60,12 +60,12 @@ export async function useGeneratedData() {
       groupsDict.set(group.group_lead_color.hex, groupsArray)
     }
 
-    for (const model of models) {
-      const modelsArray = modelsDict.get(model.image) ?? []
+    for (const product of products) {
+      const productsArray = productsDict.get(product.image) ?? []
 
-      modelsArray.push(model.id)
+      productsArray.push(product.id)
 
-      modelsDict.set(model.image, modelsArray)
+      productsDict.set(product.image, productsArray)
     }
 
     for (const color of colors) {
@@ -78,33 +78,33 @@ export async function useGeneratedData() {
       if (!colorId) continue
 
       for (const image of imagesFromDict) {
-        const insertedModelIds = modelsDict.get(image)
+        const insertedProductsIds = productsDict.get(image)
 
-        if (!insertedModelIds) continue
+        if (!insertedProductsIds) continue
 
-        for (const modelId of insertedModelIds) {
-          colorsOfModels.push({ modelId, colorId })
+        for (const productId of insertedProductsIds) {
+          colorsOfProducts.push({ productId, colorId })
         }
       }
     }
 
-    return colorsOfModels
+    return colorsOfProducts
   }
 
-  const mapSizesToModels = (modelsIds: Pick<ModelSelect, 'id'>[], sizesIds: Pick<SizeSelect, 'id'>[]) => {
-    const sizesOfModels: { modelId: ModelSelect['id'], sizeId: SizeSelect['id'] }[] = []
+  const mapSizesToProducts = (productsIds: Pick<ProductsSelect, 'id'>[], sizesIds: Pick<SizeSelect, 'id'>[]) => {
+    const sizesOfProducts: { productId: ProductsSelect['id'], sizeId: SizeSelect['id'] }[] = []
 
-    for (const model of modelsIds) {
+    for (const product of productsIds) {
       const amount = maybeValue(() => randomNumberInRangeInclusive(1, sizes.length), { probability: 0.75 }) ?? sizes.length
       const concreteSizes = sample(sizesIds, amount)
 
       for (const size of concreteSizes) {
-        sizesOfModels.push({ modelId: model.id, sizeId: size.id })
+        sizesOfProducts.push({ productId: product.id, sizeId: size.id })
       }
     }
 
-    return sizesOfModels
+    return sizesOfProducts
   }
 
-  return { colors, brands, sizes, mapModelsToBrands, mapColorsToModels, mapSizesToModels }
+  return { colors, categories, sizes, mapProductsToCategories, mapColorsToProducts, mapSizesToProducts }
 }
