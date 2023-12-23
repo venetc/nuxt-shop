@@ -4,7 +4,7 @@
 <template>
   <div class="text-3xl">
     <SharedButton variant="outline">
-      Button
+      Button?
     </SharedButton>
   </div>
 </template>
