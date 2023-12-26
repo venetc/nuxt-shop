@@ -23,9 +23,9 @@ export async function seedProducts(db: DBClient) {
 
   const categories = await db.select({ id: schema.categories.id }).from(schema.categories).all()
 
-  const mappedProductsToCategories = generatedData.mapProductsToCategories(categories)
+  const products = generatedData.createProducts(categories)
 
-  return await db.insert(schema.products).values(mappedProductsToCategories).returning().all()
+  return await db.insert(schema.products).values(products).returning().all()
 }
 
 export async function seedSizes(db: DBClient) {
@@ -40,9 +40,9 @@ export async function seedColorsOfProducts(db: DBClient) {
   const products = await db.select({ id: schema.products.id, image: schema.products.image }).from(schema.products).all()
   const colors = await db.select().from(schema.colors).all()
 
-  const mappedColorsToProducts = generatedData.mapColorsToProducts(products, colors)
+  const colorsOfProducts = generatedData.createColorsToProductsRelations(products, colors)
 
-  return await db.insert(schema.colorsOfProducts).values(mappedColorsToProducts).execute()
+  return await db.insert(schema.colorsOfProducts).values(colorsOfProducts).execute()
 }
 export async function seedSizesOfProducts(db: DBClient) {
   await db.delete(schema.sizesOfProducts).execute()
@@ -50,7 +50,7 @@ export async function seedSizesOfProducts(db: DBClient) {
   const products = await db.select({ id: schema.products.id }).from(schema.products).all()
   const sizes = await db.select({ id: schema.sizes.id }).from(schema.sizes).all()
 
-  const mappedSizesToProducts = generatedData.mapSizesToProducts(products, sizes)
+  const sizesToProducts = generatedData.createSizesToProductsRelations(products, sizes)
 
-  return await db.insert(schema.sizesOfProducts).values(mappedSizesToProducts).execute()
+  return await db.insert(schema.sizesOfProducts).values(sizesToProducts).execute()
 }
