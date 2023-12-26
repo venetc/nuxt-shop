@@ -1,3 +1,11 @@
+import jsonDescriptions from './json/descriptions.json' assert { type: 'json' }
+import jsonCategories from './json/brands.json' assert { type: 'json' }
+import jsonSizes from './json/sizes.json' assert { type: 'json' }
+import jsonProducts from './json/models.json' assert { type: 'json' }
+import jsonGroups from './json/groups.json' assert { type: 'json' }
+import jsonImages from './json/images.json' assert { type: 'json' }
+import jsonPostfixes from './json/postfixes.json' assert { type: 'json' }
+
 import type { CategoriesInsert, CategoriesSelect, ColorInsert, ColorSelect, ProductsInsert, ProductsSelect, SizeInsert, SizeSelect } from '../schema'
 
 import { getLoopedIndexItem, sample, shuffleInPlace } from '~/shared/lib/array'
@@ -5,14 +13,7 @@ import { maybeValue, randomFloatInclusive, randomNumberInRangeInclusive } from '
 import { roundToNearest } from '~/shared/lib/number'
 import { toSlug } from '~/shared/lib/string'
 
-export async function useGeneratedData() {
-  const { default: jsonDescriptions } = await import('./json/descriptions.json', { assert: { type: 'json' } })
-  const { default: jsonSizes } = await import('./json/sizes.json', { assert: { type: 'json' } })
-  const { default: jsonProducts } = await import('./json/models.json', { assert: { type: 'json' } })
-  const { default: jsonCategories } = await import('./json/brands.json', { assert: { type: 'json' } })
-  const { default: jsonGroups } = await import('./json/groups.json', { assert: { type: 'json' } })
-  const { default: jsonImages } = await import('./json/images.json', { assert: { type: 'json' } })
-  const { default: jsonPostfixes } = await import('./json/postfixes.json', { assert: { type: 'json' } })
+export function useGeneratedData() {
   const indexes = shuffleInPlace(Array.from({ length: jsonProducts.length }, (_, index) => index))
 
   const colors: ColorInsert[] = jsonGroups.map((group: typeof jsonGroups[number]) => ({ hex: group.group_lead_color.hex }))

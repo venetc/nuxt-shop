@@ -1,15 +1,22 @@
+import { readValidatedBody } from 'h3'
+import { z } from 'zod'
+
+const sc = z.object({
+  secret: z.literal(useRuntimeConfig().seedToken, { errorMap: () => ({ message: 'Invalid secret token' }) }),
+})
+
 export default defineEventHandler(async (event) => {
-  const { secret } = await readBody<{ secret: string }>(event)
+  const response = await readValidatedBody(event, sc.safeParse)
 
-  if (secret.length === 0) {
-    return createError({ statusCode: 401, statusMessage: 'Missing token' })
+  if (!response.success) {
+    const errors = response.error.flatten().fieldErrors
+
+    throw createError({
+      statusCode: 401,
+      message: Object.values(errors).join(', '),
+      data: { errors },
+    })
   }
 
-  const token = useRuntimeConfig().seedToken
-
-  if (secret !== token) {
-    return createError({ statusCode: 401, statusMessage: 'Invalid token' })
-  }
-
-  return { status: 'ok' }
+  return { data: response.data }
 })

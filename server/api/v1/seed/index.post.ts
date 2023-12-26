@@ -10,8 +10,6 @@ import {
   seedСategories,
 } from '~/server/db/mock/seed'
 
-interface SeedBody { table: Tables }
-
 export default defineEventHandler(async (event) => {
   const { table } = await readBody<SeedBody>(event)
 
@@ -29,3 +27,5 @@ export default defineEventHandler(async (event) => {
 
   return createError({ statusCode: 422, statusMessage: 'Invalid table' })
 })
+
+interface SeedBody { table: Tables }

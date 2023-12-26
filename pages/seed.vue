@@ -41,7 +41,7 @@ const authController = useFetch('/api/v1/seed/authenticate', {
   body: { secret },
 })
 
-const { execute: auth, status: authStatus, error: authError } = authController
+const { execute: auth, status: authStatus, error: authError, data: authData } = authController
 </script>
 
 <template>
@@ -147,7 +147,7 @@ const { execute: auth, status: authStatus, error: authError } = authController
               v-if="authError"
               class="absolute w-full text-center top-full mt-0.5 text-sm leading-none text-red-700"
             >
-              {{ authError?.data.message }}
+              {{ authError.data.message }}
             </span>
           </label>
           <SharedButton class="w-full" :disabled="authStatus === 'pending'" @click="auth">
@@ -161,6 +161,7 @@ const { execute: auth, status: authStatus, error: authError } = authController
           </SharedButton>
         </div>
       </Transition>
+      {{ authData?.data.secret }}
     </div>
   </div>
 </template>
