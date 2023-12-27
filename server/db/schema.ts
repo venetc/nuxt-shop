@@ -1,7 +1,9 @@
 import { relations } from 'drizzle-orm'
 import { int, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
-export type Tables = 'categories' | 'colors' | 'products' | 'sizes' | 'colors_of_products' | 'sizes_of_products'
+export const TablesKeys = ['categories', 'products', 'colors', 'sizes', 'colors_of_products', 'sizes_of_products'] as const
+export type TablesTuple = typeof TablesKeys
+export type Table = TablesTuple[number]
 
 export const categories = sqliteTable('categories', {
   id: int('id').primaryKey({ autoIncrement: true }),

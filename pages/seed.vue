@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Tables } from '@/server/db/schema'
+import { type Table, TablesKeys } from '@/server/db/schema'
 
 definePageMeta({ layout: 'headless' })
 
-function useSeeder(table: Tables) {
+function useSeeder(table: Table) {
   return useFetch('/api/v1/seed', {
     key: `seed-${table}`,
     method: 'POST',
@@ -11,15 +11,7 @@ function useSeeder(table: Tables) {
     body: { table },
   })
 }
-
-const tables = [
-  { name: 'Categories', seeder: useSeeder('categories') },
-  { name: 'Colors', seeder: useSeeder('colors') },
-  { name: 'Products', seeder: useSeeder('products') },
-  { name: 'Sizes', seeder: useSeeder('sizes') },
-  { name: 'Colors of Products', seeder: useSeeder('colors_of_products') },
-  { name: 'Sizes of Products', seeder: useSeeder('sizes_of_products') },
-]
+const tables = TablesKeys.map(table => ({ name: table.split('_').join(' '), seeder: useSeeder(table) }))
 
 const someIdle = computed(() => tables.some(table => table.seeder.status.value === 'idle'))
 const somePending = computed(() => tables.some(table => table.seeder.status.value === 'pending'))
@@ -33,7 +25,7 @@ const isPasswordVisible = ref(false)
 
 const secret = ref('')
 
-const authController = useFetch('/api/v1/seed/authenticate', {
+const authController = useFetch<{ secret: string }, ValidationErrors<{ secret: string }>>('/api/v1/seed/authenticate', {
   key: 'seed-secret-phrase',
   method: 'POST',
   immediate: false,
@@ -41,7 +33,7 @@ const authController = useFetch('/api/v1/seed/authenticate', {
   body: { secret },
 })
 
-const { execute: auth, status: authStatus, error: authError, data: authData } = authController
+const { execute: auth, status: authStatus, error: authError } = authController
 </script>
 
 <template>
@@ -66,7 +58,7 @@ const { execute: auth, status: authStatus, error: authError, data: authData } = 
               :key="table.name"
               class="text-md flex justify-between items-center font-rubik"
             >
-              <span>{{ table.name }}</span>
+              <span class="capitalize">{{ table.name }}</span>
 
               <Icon
                 v-if="table.seeder.status.value === 'pending'"
@@ -147,7 +139,7 @@ const { execute: auth, status: authStatus, error: authError, data: authData } = 
               v-if="authError"
               class="absolute w-full text-center top-full mt-0.5 text-sm leading-none text-red-700"
             >
-              {{ authError.data.message }}
+              {{ authError.data?.data.errors.secret ? authError.data.data.errors.secret[0] : authError.statusMessage }}
             </span>
           </label>
           <SharedButton class="w-full" :disabled="authStatus === 'pending'" @click="auth">
@@ -161,7 +153,6 @@ const { execute: auth, status: authStatus, error: authError, data: authData } = 
           </SharedButton>
         </div>
       </Transition>
-      {{ authData?.data.secret }}
     </div>
   </div>
 </template>
