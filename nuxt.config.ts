@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module',
     'nuxt-icon',
     '@vueuse/nuxt',
+    '@nuxtjs/i18n',
   ],
   typescript: { shim: false },
   runtimeConfig: {
@@ -22,27 +23,27 @@ export default defineNuxtConfig({
   shadcn: { prefix: 'Shared', componentDir: './shared/ui' },
   components: [
     {
-      path: '~/shared',
+      path: '~/shared/ui',
       extensions: ['.vue'],
-      pathPrefix: true,
+      pathPrefix: false,
       prefix: 'Shared',
     },
     {
       path: '~/entities',
       extensions: ['.vue'],
-      pathPrefix: true,
+      pathPrefix: false,
       prefix: 'Entity',
     },
     {
       path: '~/features',
       extensions: ['.vue'],
-      pathPrefix: true,
+      pathPrefix: false,
       prefix: 'Feature',
     },
     {
       path: '~/widgets',
       extensions: ['.vue'],
-      pathPrefix: true,
+      pathPrefix: false,
       prefix: 'Widget',
     },
   ],
@@ -61,6 +62,25 @@ export default defineNuxtConfig({
       'Nunito': [100, 200, 300, 400, 500, 600, 700, 800, 900],
       'Rubik': [100, 200, 300, 400, 500, 600, 700, 800, 900],
       'Fira Sans': [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    },
+  },
+  i18n: {
+    vueI18n: './i18n.config.ts',
+    lazy: true,
+    langDir: './locales',
+    defaultLocale: 'en',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_locale',
+      redirectOn: 'root',
+    },
+    locales: [
+      { code: 'en', iso: 'en-US', name: 'English', file: 'en.json' },
+      { code: 'ru', iso: 'ru-RU', name: 'Русский', file: 'ru.json' },
+    ],
+    experimental: {
+      localeDetector: './server/utils/localeDetector.ts',
     },
   },
 })

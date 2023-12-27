@@ -1,0 +1,34 @@
+{
+    "common": {
+        "categories": "бренды",
+        "products": "модели",
+        "colors": "цвета",
+        "sizes": "размеры",
+        "colors_of_products": "цвета моделей",
+        "sizes_of_products": "размеры моделей"
+    },
+    "plural": {
+        "categories": "{n} бренд | {n} бренда | {n} брендов"
+    },
+    "seedPage": {
+        "title": "Засидить",
+        "auth": {
+            "description_1": {
+                "part_1": "Итак, ты собираешься",
+                "part_2": "зас*ать БД моковыми данными."
+            },
+            "description_2": "Давай сюда секретную фразу.",
+            "error": "Некорректный токен",
+            "button_idle": "Войти",
+            "button_pending": "Входим"
+        },
+        "seed": {
+            "description_1": "Ну давай, крепыш.",
+            "description_2": "Перезатрем все таблицы в БД,",
+            "description_3": "но кого это волнует, правда?",
+            "button_idle": "Добавить данные",
+            "button_pending": "Добавляем...",
+            "button_complete": "Готово!"
+        }
+    }
+}

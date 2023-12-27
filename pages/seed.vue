@@ -11,7 +11,10 @@ function useSeeder(table: Table) {
     body: { table },
   })
 }
-const tables = TablesKeys.map(table => ({ name: table.split('_').join(' '), seeder: useSeeder(table) }))
+
+const { t } = useI18n()
+
+const tables = TablesKeys.map(table => ({ name: computed(() => t(`common.${table}`)), seeder: useSeeder(table) }))
 
 const someIdle = computed(() => tables.some(table => table.seeder.status.value === 'idle'))
 const somePending = computed(() => tables.some(table => table.seeder.status.value === 'pending'))
@@ -37,28 +40,28 @@ const { execute: auth, status: authStatus, error: authError } = authController
 </script>
 
 <template>
-  <div class="grid place-items-center min-h-screen">
+  <div class="grid place-items-center min-h-[calc(100vh-57px)] pb-14">
     <div class="relative m-auto w-full max-w-xs justify-center bg-navy-50 shadow-lg h-auto rounded-md px-6 py-4 pb-5">
       <h1 class="text-center font-nunito text-4xl font-semibold text-navy-900 mb-4">
-        Seeding
+        {{ $t('seedPage.title') }}
       </h1>
 
       <Transition name="fade" mode="out-in">
         <div v-if="authStatus === 'success'">
           <SharedSeparator class="mt-4 mb-4" />
           <div class="text-center leading-snug font-rubik">
-            <div>Go on, big boy.</div>
-            <div>All previous data will be deleted,</div>
-            <div>but who cares, right?</div>
+            <div>{{ $t('seedPage.seed.description_1') }}</div>
+            <div>{{ $t('seedPage.seed.description_2') }}</div>
+            <div>{{ $t('seedPage.seed.description_3') }}</div>
           </div>
           <SharedSeparator class="mt-4 mb-4" />
           <div class="space-y-1.5">
             <div
               v-for="table in tables"
-              :key="table.name"
+              :key="table.name.value"
               class="text-md flex justify-between items-center font-rubik"
             >
-              <span class="capitalize">{{ table.name }}</span>
+              <span class="capitalize">{{ table.name.value }}</span>
 
               <Icon
                 v-if="table.seeder.status.value === 'pending'"
@@ -97,7 +100,7 @@ const { execute: auth, status: authStatus, error: authError } = authController
               :disabled="somePending"
               @click="seedAll"
             >
-              {{ somePending ? 'Seeding...' : 'Add data' }}
+              {{ somePending ? $t('seedPage.seed.button_pending') : $t('seedPage.seed.button_idle') }}
             </SharedButton>
 
             <div v-else class="w-full min-h-[36px] grid place-items-center items-center text-center">
@@ -105,7 +108,7 @@ const { execute: auth, status: authStatus, error: authError } = authController
                 ¯\_(ツ)_/¯
               </div>
               <div v-else class="text-green-700 font-rubik">
-                Done!
+                {{ $t('seedPage.seed.button_complete') }}
               </div>
             </div>
           </div>
@@ -114,8 +117,11 @@ const { execute: auth, status: authStatus, error: authError } = authController
         <div v-else>
           <SharedSeparator class="mt-4 mb-5" />
           <div class="text-center leading-snug font-rubik">
-            So, you are about<br>to seed some juicy data.<br>
-            Give me secret phrase to proceed.
+            {{ $t('seedPage.auth.description_1.part_1') }}
+            <br>
+            {{ $t('seedPage.auth.description_1.part_2') }}
+            <br>
+            {{ $t('seedPage.auth.description_2') }}
           </div>
           <label class="relative my-5 block">
             <SharedInput
@@ -143,7 +149,7 @@ const { execute: auth, status: authStatus, error: authError } = authController
             </span>
           </label>
           <SharedButton class="w-full" :disabled="authStatus === 'pending'" @click="auth">
-            <div>{{ authStatus === 'pending' ? 'Authenticating' : 'Authenticate' }}</div>
+            <div>{{ authStatus === 'pending' ? $t('seedPage.auth.button_pending') : $t('seedPage.auth.button_idle') }}</div>
             <Icon
               v-if="authStatus === 'pending'"
               name="fluent:spinner-ios-16-regular"

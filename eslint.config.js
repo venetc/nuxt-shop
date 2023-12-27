@@ -7,6 +7,8 @@ export default antfu({
     'curly': ['off', 'multi', 'consistent'],
     'no-console': 'off',
     'node/prefer-global/process': 'off',
+    'vue/attribute-hyphenation': 'off',
+    'vue/v-on-event-hyphenation': 'off',
     'import/order': [
       'warn',
       {

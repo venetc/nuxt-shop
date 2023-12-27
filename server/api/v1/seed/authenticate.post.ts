@@ -1,12 +1,15 @@
 import { readValidatedBody } from 'h3'
 import { z } from 'zod'
 
-const authSchema = z.object({
-  secret: z.literal(useRuntimeConfig().seedToken, { errorMap: () => ({ message: 'Invalid secret token' }) }),
-})
+function dynamicSchema(message: string) {
+  return z.object({ secret: z.literal(useRuntimeConfig().seedToken, { errorMap: () => ({ message }) }) })
+}
 
 export default defineEventHandler(async (event) => {
-  const response = await readValidatedBody(event, authSchema.safeParse)
+  const t = await useTranslation(event)
+  const errorMessage = t('seedPage.auth.error')
+
+  const response = await readValidatedBody(event, dynamicSchema(errorMessage).safeParse)
 
   if (!response.success) {
     const errors = response.error.flatten().fieldErrors

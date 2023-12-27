@@ -1,31 +1,35 @@
 <template>
-  <div>
-    <div class="fixed z-10 top-0 left-0 w-full font-nunito text-2xl">
-      <nav class="flex flex-row gap-2">
-        <ul class="border px-2 py-1 rounded-md shadow bg-navy-50">
-          <NuxtLink :to="{ path: '/catalogue' }">
-            Catalogue
-          </NuxtLink>
-        </ul>
-        <ul class="border px-2 py-1 rounded-md shadow bg-navy-50">
-          <NuxtLink :to="{ path: '/product/1', query: { id: [1, 2] } }">
-            Product
-          </NuxtLink>
-        </ul>
-        <ul class="border px-2 py-1 rounded-md shadow bg-navy-50">
-          <NuxtLink to="/">
-            Home
-          </NuxtLink>
-        </ul>
-        <ul class="border px-2 py-1 rounded-md shadow bg-navy-50">
-          <NuxtLink to="/seed">
-            Seed
-          </NuxtLink>
-        </ul>
-      </nav>
-    </div>
-    <div class="min-h-screen pt-20">
+  <div class="relative flex min-h-screen flex-col">
+    <header class="sticky top-0 z-50 border-b rounded-b-lg border-border/40 mx-auto w-full max-w-screen-2xl px-3 backdrop-blur bg-navy-200/95 supports-[backdrop-filter]:bg-navy-200/25">
+      <div class="flex h-14 items-center">
+        <nav class="flex flex-row">
+          <SharedButton variant="link" size="default">
+            <NuxtLink :to="{ path: '/catalogue' }">
+              Catalogue
+            </NuxtLink>
+          </SharedButton>
+          <SharedButton variant="link" size="default">
+            <NuxtLink :to="{ path: '/product/1', query: { id: [1, 2] } }">
+              Product
+            </NuxtLink>
+          </SharedButton>
+          <SharedButton variant="link" size="default">
+            <NuxtLink to="/">
+              Home
+            </NuxtLink>
+          </SharedButton>
+          <SharedButton variant="link" size="default">
+            <NuxtLink to="/seed">
+              Seed
+            </NuxtLink>
+          </SharedButton>
+        </nav>
+
+        <FeatureLanguageChanger />
+      </div>
+    </header>
+    <main class="flex-1">
       <NuxtPage />
-    </div>
+    </main>
   </div>
 </template>

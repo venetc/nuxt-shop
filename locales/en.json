@@ -1,0 +1,34 @@
+{
+    "common": {
+        "categories": "brands",
+        "products": "models",
+        "colors": "colors",
+        "sizes": "sizes",
+        "colors_of_products": "colors of brands",
+        "sizes_of_products": "sizes of brands"
+    },
+    "plural": {
+        "categories": "{n} brands | {n} brand | {n} brands"
+    },
+    "seedPage": {
+        "title": "Seeding",
+        "auth": {
+            "description_1": {
+                "part_1": "So, you are about",
+                "part_2": "to seed DB with some juicy data."
+            },
+            "description_2": "Give me secret phrase to proceed.",
+            "error": "Invalid secret token",
+            "button_idle": "Authenticate",
+            "button_pending": "Authenticating"
+        },
+        "seed": {
+            "description_1": "Go on, big boy.",
+            "description_2": "All previous data will be deleted,",
+            "description_3": "but who cares, right?",
+            "button_idle": "Add data",
+            "button_pending": "Seeding...",
+            "button_complete": "Done!"
+        }
+    }
+}

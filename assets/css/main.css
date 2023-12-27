@@ -6,3 +6,10 @@
 .fade-leave-to {
   opacity: 0;
 }
+
+:root {
+  scrollbar-face-color: #264b66;
+  scrollbar-track-color: #e7f0f7;
+  scrollbar-color: #264b66 #e7f0f7;
+  scrollbar-width: thin;
+}
