@@ -8,8 +8,8 @@
 }
 
 :root {
-  scrollbar-face-color: #264b66;
-  scrollbar-track-color: #e7f0f7;
-  scrollbar-color: #264b66 #e7f0f7;
+  scrollbar-face-color: hsl(var(--foreground));
+  scrollbar-track-color: hsl(var(--background));
+  scrollbar-color: hsl(var(--foreground)) hsl(var(--background));
   scrollbar-width: thin;
 }

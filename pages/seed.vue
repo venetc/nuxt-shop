@@ -42,6 +42,18 @@ const { execute: auth, status: authStatus, error: authError } = authController
 <template>
   <div class="grid place-items-center min-h-[calc(100vh-57px)] pb-14">
     <div class="relative m-auto w-full max-w-xs justify-center bg-navy-50 shadow-lg h-auto rounded-md px-6 py-4 pb-5">
+      <SharedButton
+        variant="link"
+        size="icon"
+        class="absolute top-5 left-3 bg-navy-50"
+        @click="authStatus === 'success' ? authStatus = 'idle' : navigateTo({ path: '/' })"
+      >
+        <Icon
+          name="lucide:arrow-left"
+          size="20"
+          class="text-navy-500"
+        />
+      </SharedButton>
       <h1 class="text-center font-nunito text-4xl font-semibold text-navy-900 mb-4">
         {{ $t('seedPage.title') }}
       </h1>
@@ -132,15 +144,20 @@ const { execute: auth, status: authStatus, error: authError } = authController
               @input="authError = null"
               @keyup.enter="auth"
             />
-            <Icon
-              :name="isPasswordVisible ? 'lucide:eye-off' : 'lucide:eye'"
-              size="20"
+            <SharedButton
+              size="sm"
+              variant="link"
               :class="cn(
-                'absolute top-1/2 -translate-y-1/2 right-2 cursor-pointer transition-colors',
+                'absolute top-1/2 -translate-y-1/2 right-0.5 cursor-pointer transition-all',
                 authError === null ? 'text-navy-900' : 'text-red-900',
               )"
               @click="isPasswordVisible = !isPasswordVisible"
-            />
+            >
+              <Icon
+                :name="isPasswordVisible ? 'lucide:eye-off' : 'lucide:eye'"
+                size="20"
+              />
+            </SharedButton>
             <span
               v-if="authError"
               class="absolute w-full text-center top-full mt-0.5 text-sm leading-none text-red-700"

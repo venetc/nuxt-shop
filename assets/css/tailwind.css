@@ -4,7 +4,7 @@
  
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 206 50% 94%;
     --foreground: 207 40% 26%;
  
     --muted: 210 40% 96.1%;
@@ -16,8 +16,8 @@
     --card: 0 0% 100%;
     --card-foreground: 207 40% 26%;
  
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 204 35% 89%;
+    --input: 204 35% 89%;
  
     --primary: 207 40% 26%;
     --primary-foreground: 210 40% 98%;
@@ -31,7 +31,7 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
  
-    --ring: 207 40% 26%;
+    --ring: 206 49% 32%;
  
     --radius: 0.5rem;
   }
@@ -40,6 +40,6 @@
     @apply border-border;
   }
   body {
-    background-color: #e7f0f7;
+    background-color: hsl(var(--background));
   }
 }
