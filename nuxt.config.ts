@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     'nuxt-icon',
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
+    '@nuxt/image',
   ],
   typescript: { shim: false },
   runtimeConfig: {
@@ -48,12 +49,7 @@ export default defineNuxtConfig({
     },
   ],
   imports: {
-    dirs: [
-      'shared/**',
-      'entities/**',
-      'features/**',
-      'widgets/**',
-    ],
+    dirs: ['shared/**'],
   },
   googleFonts: {
     display: 'swap',
@@ -81,6 +77,13 @@ export default defineNuxtConfig({
     ],
     experimental: {
       localeDetector: './server/utils/localeDetector.ts',
+    },
+  },
+  image: {
+    domains: ['i.imgur.com'],
+    rovider: 'ipx',
+    ipx: {
+      maxAge: 3600,
     },
   },
 })

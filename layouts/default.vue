@@ -9,8 +9,13 @@
             </NuxtLink>
           </SharedButton>
           <SharedButton asChild variant="link" size="default">
-            <NuxtLink :to="{ path: '/product/1', query: { id: [1, 2] } }">
+            <NuxtLink :to="{ name: 'product-slug', params: { slug: 'airmax-supreme-alpha' } }">
               Product
+            </NuxtLink>
+          </SharedButton>
+          <SharedButton asChild variant="link" size="default">
+            <NuxtLink :to="{ name: 'product-slug', params: { slug: '1' } }">
+              Wrong product
             </NuxtLink>
           </SharedButton>
           <SharedButton asChild variant="link" size="default">
