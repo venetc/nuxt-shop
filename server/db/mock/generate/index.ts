@@ -1,12 +1,26 @@
-import jsonDescriptions from '../json/descriptions.json' assert { type: 'json' }
+import jsonModelDescriptionsEN from '../json/model_descriptions_en.json' assert { type: 'json' }
+import jsonModelDescriptionsRU from '../json/model_descriptions_ru.json' assert { type: 'json' }
+import jsonBrandDescriptionsEN from '../json/brand_descriptions_en.json' assert { type: 'json' }
+import jsonBrandDescriptionsRU from '../json/brand_descriptions_ru.json' assert { type: 'json' }
 import jsonCategories from '../json/brands.json' assert { type: 'json' }
 import jsonSizes from '../json/sizes.json' assert { type: 'json' }
 import jsonProducts from '../json/models.json' assert { type: 'json' }
 import jsonGroups from '../json/groups.json' assert { type: 'json' }
 import jsonImages from '../json/images.json' assert { type: 'json' }
 import jsonPostfixes from '../json/postfixes.json' assert { type: 'json' }
+import jsonLogos from '../json/logos.json' assert { type: 'json' }
 
-import type { CategoriesInsert, CategoriesSelect, ColorInsert, ColorSelect, ProductsInsert, ProductsSelect, SizeInsert, SizeSelect } from '~/server/db/schema'
+import type {
+  CategoriesInsert,
+  CategoriesSelect,
+  ColorInsert,
+  ColorSelect,
+  ProductsInsert,
+  ProductsSelect,
+  SizeInsert,
+  SizeSelect,
+  SizesOfModelInsert,
+} from '~/server/db/schema'
 
 import { getLoopedIndexItem, sample, shuffleInPlace } from '~/shared/lib/array'
 import { maybeValue, randomFloatInclusive, randomNumberInRangeInclusive } from '~/shared/lib/random'
@@ -16,8 +30,16 @@ import { toSlug } from '~/shared/lib/string'
 export function useGeneratedData() {
   const shuffledIndexes = shuffleInPlace(Array.from({ length: jsonProducts.length }, (_, index) => index))
   const colors: ColorInsert[] = jsonGroups.map((group: typeof jsonGroups[number]) => ({ hex: group.group_lead_color.hex }))
-  const categories: CategoriesInsert[] = jsonCategories.map((category: typeof jsonCategories[number]) => ({ name: category }))
   const sizes: SizeInsert[] = jsonSizes.map(({ size }: typeof jsonSizes[number]) => ({ size }))
+
+  const categories: CategoriesInsert[] = jsonCategories
+    .map((name: typeof jsonCategories[number], index) => {
+      const descriptionEnglish = getLoopedIndexItem(index, jsonBrandDescriptionsEN)
+      const descriptionRussian = getLoopedIndexItem(index, jsonBrandDescriptionsRU)
+      const logo = getLoopedIndexItem(index, jsonLogos)
+
+      return { name, logo, descriptionEnglish, descriptionRussian }
+    })
 
   const createProducts = (partialCategories: Pick<CategoriesSelect, 'id'>[]) => {
     const products: ProductsInsert[] = jsonProducts.map((product: typeof jsonProducts[number], index: number) => {
@@ -27,14 +49,27 @@ export function useGeneratedData() {
       const fullPrice = roundToNearest(fullPriceRaw, 100)
       const stockAmount = randomNumberInRangeInclusive(0, 100)
       const rating = maybeValue(() => roundToNearest(randomFloatInclusive(2, 5), 0.5), { probability: 0.75 }) ?? 5
-      const description = getLoopedIndexItem(index, jsonDescriptions)
+      const descriptionEnglish = getLoopedIndexItem(index, jsonModelDescriptionsEN)
+      const descriptionRussian = getLoopedIndexItem(index, jsonModelDescriptionsRU)
       const image = getLoopedIndexItem(index, jsonImages).image
       const name = `${product} ${getLoopedIndexItem(index, jsonPostfixes)}`
       const slug = toSlug(name)
       const sortIndex = shuffledIndexes[index]
       const categoryId = getLoopedIndexItem(index, partialCategories).id
 
-      return { description, image, name, rating, stockAmount, discountPrice, fullPrice, slug, sortIndex, categoryId }
+      return {
+        descriptionEnglish,
+        descriptionRussian,
+        image,
+        name,
+        rating,
+        stockAmount,
+        discountPrice,
+        fullPrice,
+        slug,
+        sortIndex,
+        categoryId,
+      }
     })
 
     return products
@@ -66,15 +101,23 @@ export function useGeneratedData() {
     return colorsOfProducts
   }
 
-  const createSizesToProductsRelations = (productsIds: Pick<ProductsSelect, 'id'>[], sizesIds: Pick<SizeSelect, 'id'>[]) => {
-    const sizesOfProducts: { productId: ProductsSelect['id'], sizeId: SizeSelect['id'] }[] = []
+  const createSizesToProductsRelations = (
+    products: Pick<ProductsSelect, 'id' | 'stockAmount'>[],
+    sizesIds: Pick<SizeSelect, 'id'>[],
+  ) => {
+    const sizesOfProducts: SizesOfModelInsert[] = []
 
-    for (const product of productsIds) {
+    for (const product of products) {
       const amount = maybeValue(() => randomNumberInRangeInclusive(1, sizes.length), { probability: 0.75 }) ?? sizes.length
-      const concreteSizes = sample(sizesIds, amount)
+      const concreteSizes = sample(sizesIds, amount > product.stockAmount ? product.stockAmount : amount)
 
-      for (const size of concreteSizes) {
-        sizesOfProducts.push({ productId: product.id, sizeId: size.id })
+      const productsInSize = Math.floor(product.stockAmount / concreteSizes.length)
+      const remainder = product.stockAmount % concreteSizes.length
+
+      for (let i = 0; i <= concreteSizes.length - 1; i++) {
+        const size = concreteSizes[i]
+        const stockAmount = i === concreteSizes.length - 1 ? productsInSize + remainder : productsInSize
+        sizesOfProducts.push({ productId: product.id, sizeId: size.id, stockAmount })
       }
     }
 

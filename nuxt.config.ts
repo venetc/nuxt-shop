@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
     '@nuxt/image',
+    '@pinia/nuxt',
   ],
   typescript: { shim: false },
   runtimeConfig: {
@@ -49,7 +50,12 @@ export default defineNuxtConfig({
     },
   ],
   imports: {
-    dirs: ['shared/**'],
+    dirs: [
+      'shared/**/*.{ts,js}',
+      'entities/**/*.{ts,js}',
+      'features/**/*.{ts,js}',
+      'widgets/**/*.{ts,js}',
+    ],
   },
   googleFonts: {
     display: 'swap',

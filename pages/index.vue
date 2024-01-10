@@ -12,20 +12,24 @@ const query: Ref<QuerySchema> = ref({
   priceMin: undefined,
   sizeId: undefined,
 })
-const categoryId = computed({
-  get: () => {
+
+const category = {
+  transformGetter: () => {
     if (Array.isArray(query.value.categoryId)) return query.value.categoryId.join(' ')
     return query.value.categoryId
   },
-  set: (value) => {
-    if (!value) {
-      query.value.categoryId = undefined
-    }
+  transformSetter: (value: string | undefined) => {
+    if (!value) query.value.categoryId = undefined
     else if (!Array.isArray(value)) {
       const v = value.split(' ').filter(v => Boolean(v) && !Number.isNaN(+v))
       query.value.categoryId = v.length > 1 ? v : v[0]
     }
   },
+}
+
+const categoryId = computed({
+  get: category.transformGetter,
+  set: category.transformSetter,
 })
 
 const priceMin = computed({
@@ -79,7 +83,7 @@ watchDebounced(query.value, () => {
         <NuxtLink
           v-for="product in data.data"
           :key="product.id"
-          class="bg-navy-50 pt-2 rounded-md shadow-md overflow-hidden"
+          class="bg-white pt-2 rounded-md shadow-md overflow-hidden"
           :to="{ name: 'product-slug', params: { slug: product.slug } }"
         >
           <div class="flex space-x-3 px-3">

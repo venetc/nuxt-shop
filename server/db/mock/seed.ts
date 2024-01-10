@@ -47,7 +47,7 @@ export async function seedColorsOfProducts(db: DBClient) {
 export async function seedSizesOfProducts(db: DBClient) {
   await db.delete(schema.sizesOfProducts).execute()
 
-  const products = await db.select({ id: schema.products.id }).from(schema.products).all()
+  const products = await db.select({ id: schema.products.id, stockAmount: schema.products.stockAmount }).from(schema.products).all()
   const sizes = await db.select({ id: schema.sizes.id }).from(schema.sizes).all()
 
   const sizesToProducts = generatedData.createSizesToProductsRelations(products, sizes)

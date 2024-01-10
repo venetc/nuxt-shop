@@ -8,6 +8,9 @@ export type Table = TablesTuple[number]
 export const categories = sqliteTable('categories', {
   id: int('id').primaryKey({ autoIncrement: true }),
   name: text('name').unique().notNull(),
+  logo: text('logo').notNull(),
+  descriptionEnglish: text('description_en').notNull(),
+  descriptionRussian: text('description_ru').notNull(),
 })
 
 export const colors = sqliteTable('colors', {
@@ -18,7 +21,8 @@ export const colors = sqliteTable('colors', {
 export const products = sqliteTable('products', {
   id: int('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
-  description: text('description').notNull(),
+  descriptionEnglish: text('description_en').notNull(),
+  descriptionRussian: text('description_ru').notNull(),
   stockAmount: int('stock_amount').notNull().default(0),
   fullPrice: int('full_price').notNull(),
   discountPrice: int('discount_price'),
@@ -44,6 +48,7 @@ export const colorsOfProducts = sqliteTable('colors_of_products', {
 export const sizesOfProducts = sqliteTable('sizes_of_products', {
   productId: int('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
   sizeId: int('size_id').notNull().references(() => sizes.id, { onDelete: 'cascade' }),
+  stockAmount: int('stock_amount').notNull().default(0),
 }, ({ productId, sizeId }) => ({
   pk: primaryKey({ columns: [productId, sizeId] }),
 }))
