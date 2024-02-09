@@ -1,4 +1,4 @@
-import { maybeValue, randomBoolean, randomFloatInclusive, randomNumberInRangeInclusive } from './random'
+import { maybeValue, randomBoolean, randomFloatInclusive, randomNumberInRangeInclusive } from '../random'
 
 import { describe, expect, it, vi } from 'vitest'
 

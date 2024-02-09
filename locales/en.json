@@ -2,10 +2,12 @@
     "common": {
         "categories": "brands",
         "products": "models",
-        "colors": "colors",
+        "global_colors": "common colors",
         "sizes": "sizes",
-        "colors_of_products": "colors of brands",
-        "sizes_of_products": "sizes of brands"
+        "global_colors_of_products": "common colors of brands",
+        "sizes_of_products": "sizes of brands",
+        "by": "by",
+        "siteName": "Sneakers shop"
     },
     "plural": {
         "categories": "{n} brands | {n} brand | {n} brands"
@@ -30,5 +32,9 @@
             "button_pending": "Seeding...",
             "button_complete": "Done!"
         }
+    },
+    "productPage": {
+        "title": "Awesome sneakers model",
+        "description": "Introducing the ultimate sneakers for style and comfort - a must-have addition to your footwear collection."
     }
 }

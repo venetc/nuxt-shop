@@ -12,22 +12,20 @@ const availableLocales = computed(() => {
   <div>
     <SharedDropdownMenu>
       <SharedDropdownMenuTrigger asChild>
-        <SharedButton
-          variant="outline"
-          size="icon"
+        <SharedButton variant="outline"
+                      size="icon"
         >
-          <Icon
-            name="ic:outline-g-translate"
-            class="text-navy-500"
-            size="24"
+          <Icon name="ic:outline-g-translate"
+                class="text-navy-500"
+                size="24"
           />
         </SharedButton>
       </SharedDropdownMenuTrigger>
       <SharedDropdownMenuContent :collisionPadding="{ left: 12, right: 12 }">
-        <SharedDropdownMenuItem
-          v-for="locale in availableLocales"
-          :key="locale.name"
-          @click="setLocale(locale.code)"
+        <SharedDropdownMenuItem v-for="locale in availableLocales"
+                                :key="locale.name"
+                                class="cursor-pointer"
+                                @click="setLocale(locale.code)"
         >
           {{ locale.name }}
         </SharedDropdownMenuItem>

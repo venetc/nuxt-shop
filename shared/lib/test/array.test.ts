@@ -1,4 +1,4 @@
-import { getLoopedIndexItem, sample, shuffleInPlace } from './array'
+import { getLoopedIndexItem, sample, shuffleInPlace } from '../array'
 
 import { describe, expect, it } from 'vitest'
 

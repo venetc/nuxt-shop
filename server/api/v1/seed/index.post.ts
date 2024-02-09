@@ -3,8 +3,8 @@ import { z } from 'zod'
 import { TablesKeys } from '~/server/db/schema'
 import { useDBClient } from '~/server/db/client'
 import {
-  seedColors,
-  seedColorsOfProducts,
+  seedGlobalColors,
+  seedGlobalColorsOfProducts,
   seedProducts,
   seedSizes,
   seedSizesOfProducts,
@@ -32,10 +32,10 @@ export default defineEventHandler(async (event) => {
 
   switch (response.data.table) {
     case 'categories': { await seedСategories(dbClient); break }
-    case 'colors': { await seedColors(dbClient); break }
+    case 'global_colors': { await seedGlobalColors(dbClient); break }
     case 'sizes': { await seedSizes(dbClient); break }
     case 'products': { await seedProducts(dbClient); break }
-    case 'colors_of_products': { await seedColorsOfProducts(dbClient); break }
+    case 'global_colors_of_products': { await seedGlobalColorsOfProducts(dbClient); break }
     case 'sizes_of_products': { await seedSizesOfProducts(dbClient); break }
   }
 

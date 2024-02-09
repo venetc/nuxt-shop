@@ -1,4 +1,4 @@
-import { roundToNearest } from './number'
+import { roundToNearest } from '../number'
 
 import { describe, expect, it } from 'vitest'
 

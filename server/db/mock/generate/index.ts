@@ -13,8 +13,8 @@ import jsonLogos from '../json/logos.json' assert { type: 'json' }
 import type {
   CategoriesInsert,
   CategoriesSelect,
-  ColorInsert,
-  ColorSelect,
+  GlobalColorInsert,
+  GlobalColorSelect,
   ProductsInsert,
   ProductsSelect,
   SizeInsert,
@@ -29,7 +29,7 @@ import { toSlug } from '~/shared/lib/string'
 
 export function useGeneratedData() {
   const shuffledIndexes = shuffleInPlace(Array.from({ length: jsonProducts.length }, (_, index) => index))
-  const colors: ColorInsert[] = jsonGroups.map((group: typeof jsonGroups[number]) => ({ hex: group.group_lead_color.hex }))
+  const globalColors: GlobalColorInsert[] = jsonGroups.map((group: typeof jsonGroups[number]) => ({ hex: group.group_lead_color.hex }))
   const sizes: SizeInsert[] = jsonSizes.map(({ size }: typeof jsonSizes[number]) => ({ size }))
 
   const categories: CategoriesInsert[] = jsonCategories
@@ -43,6 +43,7 @@ export function useGeneratedData() {
 
   const createProducts = (partialCategories: Pick<CategoriesSelect, 'id'>[]) => {
     const products: ProductsInsert[] = jsonProducts.map((product: typeof jsonProducts[number], index: number) => {
+      const imageFromJson = getLoopedIndexItem(index, jsonImages)
       const discountPriceRaw = maybeValue(() => randomNumberInRangeInclusive(2_000, 4_000), { probability: 0.25 })
       const discountPrice = discountPriceRaw ? roundToNearest(discountPriceRaw, 100) : null
       const fullPriceRaw = randomNumberInRangeInclusive(4_500, 10_000)
@@ -51,7 +52,8 @@ export function useGeneratedData() {
       const rating = maybeValue(() => roundToNearest(randomFloatInclusive(2, 5), 0.5), { probability: 0.75 }) ?? 5
       const descriptionEnglish = getLoopedIndexItem(index, jsonModelDescriptionsEN)
       const descriptionRussian = getLoopedIndexItem(index, jsonModelDescriptionsRU)
-      const image = getLoopedIndexItem(index, jsonImages).image
+      const image = imageFromJson.image
+      const productColors = imageFromJson.colors
       const name = `${product} ${getLoopedIndexItem(index, jsonPostfixes)}`
       const slug = toSlug(name)
       const sortIndex = shuffledIndexes[index]
@@ -69,23 +71,24 @@ export function useGeneratedData() {
         slug,
         sortIndex,
         categoryId,
+        productColors,
       }
     })
 
     return products
   }
 
-  const createColorsToProductsRelations = (products: Pick<ProductsSelect, 'id' | 'image'>[], colors: ColorSelect[]) => {
-    const colorsOfProducts: { productId: ProductsSelect['id'], colorId: ColorSelect['id'] }[] = []
+  const createColorsToProductsRelations = (products: Pick<ProductsSelect, 'id' | 'image'>[], globalColors: GlobalColorSelect[]) => {
+    const colorsOfProducts: { productId: ProductsSelect['id'], globalColorId: GlobalColorSelect['id'] }[] = []
 
     const groupsDict = createColorGroupsDictionary(jsonGroups)
     const productsDict = createProductsDictionary(products)
-    const colorsDict = createColorsDictionary(colors)
+    const colorsDict = createColorsDictionary(globalColors)
 
     for (const [hexFromDict, imagesFromDict] of groupsDict) {
-      const colorId = colorsDict.get(hexFromDict)
+      const globalColorId = colorsDict.get(hexFromDict)
 
-      if (!colorId) continue
+      if (!globalColorId) continue
 
       for (const image of imagesFromDict) {
         const insertedProductsIds = productsDict.get(image)
@@ -93,7 +96,7 @@ export function useGeneratedData() {
         if (!insertedProductsIds) continue
 
         for (const productId of insertedProductsIds) {
-          colorsOfProducts.push({ productId, colorId })
+          colorsOfProducts.push({ productId, globalColorId })
         }
       }
     }
@@ -124,11 +127,11 @@ export function useGeneratedData() {
     return sizesOfProducts
   }
 
-  return { colors, categories, sizes, createProducts, createColorsToProductsRelations, createSizesToProductsRelations }
+  return { globalColors, categories, sizes, createProducts, createColorsToProductsRelations, createSizesToProductsRelations }
 }
 
 function createColorGroupsDictionary(groups: typeof jsonGroups) {
-  const groupsDict = new Map<ColorSelect['hex'], ProductsSelect['image'][]>()
+  const groupsDict = new Map<GlobalColorSelect['hex'], ProductsSelect['image'][]>()
 
   for (const group of groups) {
     const groupsArray = groupsDict.get(group.group_lead_color.hex) ?? []
@@ -157,8 +160,8 @@ function createProductsDictionary(partialProducts: Pick<ProductsSelect, 'id' | '
   return productsDict
 }
 
-function createColorsDictionary(colors: ColorSelect[]) {
-  const colorsDict = new Map<ColorSelect['hex'], ColorSelect['id']>()
+function createColorsDictionary(colors: GlobalColorSelect[]) {
+  const colorsDict = new Map<GlobalColorSelect['hex'], GlobalColorSelect['id']>()
 
   for (const color of colors) {
     colorsDict.set(color.hex, color.id)

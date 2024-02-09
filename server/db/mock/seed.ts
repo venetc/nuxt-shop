@@ -12,10 +12,10 @@ export async function seedСategories(db: DBClient) {
   return await db.insert(schema.categories).values(generatedData.categories).returning().all()
 }
 
-export async function seedColors(db: DBClient) {
-  await db.delete(schema.colors).execute()
+export async function seedGlobalColors(db: DBClient) {
+  await db.delete(schema.globalColors).execute()
 
-  return await db.insert(schema.colors).values(generatedData.colors).returning().all()
+  return await db.insert(schema.globalColors).values(generatedData.globalColors).returning().all()
 }
 
 export async function seedProducts(db: DBClient) {
@@ -34,15 +34,15 @@ export async function seedSizes(db: DBClient) {
   return await db.insert(schema.sizes).values(generatedData.sizes).returning().all()
 }
 
-export async function seedColorsOfProducts(db: DBClient) {
-  await db.delete(schema.colorsOfProducts).execute()
+export async function seedGlobalColorsOfProducts(db: DBClient) {
+  await db.delete(schema.globalColorsOfProducts).execute()
 
   const products = await db.select({ id: schema.products.id, image: schema.products.image }).from(schema.products).all()
-  const colors = await db.select().from(schema.colors).all()
+  const globalColors = await db.select().from(schema.globalColors).all()
 
-  const colorsOfProducts = generatedData.createColorsToProductsRelations(products, colors)
+  const globalColorsOfProducts = generatedData.createColorsToProductsRelations(products, globalColors)
 
-  return await db.insert(schema.colorsOfProducts).values(colorsOfProducts).execute()
+  return await db.insert(schema.globalColorsOfProducts).values(globalColorsOfProducts).execute()
 }
 export async function seedSizesOfProducts(db: DBClient) {
   await db.delete(schema.sizesOfProducts).execute()

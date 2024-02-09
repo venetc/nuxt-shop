@@ -2,10 +2,12 @@
     "common": {
         "categories": "бренды",
         "products": "модели",
-        "colors": "цвета",
+        "global_colors": "общие цвета",
         "sizes": "размеры",
-        "colors_of_products": "цвета моделей",
-        "sizes_of_products": "размеры моделей"
+        "global_colors_of_products": "общие цвета моделей",
+        "sizes_of_products": "размеры моделей",
+        "by": "от",
+        "siteName": "Магазин кросовок"
     },
     "plural": {
         "categories": "{n} бренд | {n} бренда | {n} брендов"
@@ -30,5 +32,9 @@
             "button_pending": "Добавляем...",
             "button_complete": "Готово!"
         }
+    },
+    "productPage": {
+        "title": "Потрясающая модель кросовок",
+        "description": "Наденьте эти кроссовки и почувствуйте невероятное соединение комфорта и стиля."
     }
 }

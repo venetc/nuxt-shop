@@ -1,4 +1,4 @@
-import { camelToKebab, camelToSnake, kebabToCamel, snakeToCamel, toSlug } from './string'
+import { camelToKebab, camelToSnake, kebabToCamel, snakeToCamel, toSlug } from '../string'
 
 import { describe, expect, it } from 'vitest'
 

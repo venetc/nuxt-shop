@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxtjs/google-fonts',
-    'shadcn-nuxt',
+    './modules/shadcn',
     '@nuxt/test-utils/module',
     'nuxt-icon',
     '@vueuse/nuxt',
@@ -22,7 +22,6 @@ export default defineNuxtConfig({
     tursoDbToken: process.env.NUXT_TURSO_DB_TOKEN,
     seedToken: process.env.NUXT_SEED_TOKEN,
   },
-  shadcn: { prefix: 'Shared', componentDir: './shared/ui' },
   components: [
     {
       path: '~/shared/ui',
@@ -34,21 +33,19 @@ export default defineNuxtConfig({
       path: '~/entities',
       extensions: ['.vue'],
       pathPrefix: false,
-      prefix: 'Entity',
     },
     {
       path: '~/features',
       extensions: ['.vue'],
       pathPrefix: false,
-      prefix: 'Feature',
     },
     {
       path: '~/widgets',
       extensions: ['.vue'],
       pathPrefix: false,
-      prefix: 'Widget',
     },
   ],
+  shadcn: { prefix: 'Shared', componentDir: './shared/ui' },
   imports: {
     dirs: [
       'shared/**/*.{ts,js}',

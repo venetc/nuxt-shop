@@ -1,7 +1,5 @@
 import { cva } from 'class-variance-authority'
 
-// export { default as Button } from './Button.vue'
-
 export const buttonVariants = cva(
   'inline-flex items-center ring-offset-navy-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ring-offset-2 justify-center rounded-md text-sm font-medium font-nunito transition-all disabled:pointer-events-none disabled:opacity-50',
   {

@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { QuerySchema } from '~/server/api/v1/products/index.get'
 
+definePageMeta({ layout: 'default' })
+
 const query: Ref<QuerySchema> = ref({
   categoryId: undefined,
   colorId: undefined,
   order: undefined,
   orderBy: undefined,
   page: '1',
-  pageSize: '5',
+  pageSize: '12',
   priceMax: undefined,
   priceMin: undefined,
   sizeId: undefined,
@@ -63,28 +65,37 @@ watchDebounced(query.value, () => {
     <div class="max-w-md px-1.5 py-1.5 rounded-md bg-white space-y-2">
       <div class="flex items-center justify-between">
         <div>Category id:</div>
-        <SharedInput v-model.trim="categoryId" class="max-w-xs" />
+        <SharedInput v-model.trim="categoryId"
+                     class="max-w-xs"
+        />
       </div>
       <div class="flex items-center bg-white justify-between ">
         <div>Price min:</div>
-        <SharedInput v-model.trim="priceMin" type="number" class="max-w-xs" />
+        <SharedInput v-model.trim="priceMin"
+                     type="number"
+                     class="max-w-xs"
+        />
       </div>
       <div class="flex items-center bg-white justify-between ">
         <div>Price max:</div>
-        <SharedInput v-model.trim="priceMax" type="number" class="max-w-xs" />
+        <SharedInput v-model.trim="priceMax"
+                     type="number"
+                     class="max-w-xs"
+        />
       </div>
     </div>
     <SharedSeparator />
-    <div v-if="data" class="flex flex-col space-y-3">
+    <div v-if="data"
+         class="flex flex-col space-y-3"
+    >
       <div class="font-nunito text-lg">
         Response meta: {{ data.meta }}
       </div>
-      <div class="font-rubik font-light grid gap-2 grid-cols-5">
-        <NuxtLink
-          v-for="product in data.data"
-          :key="product.id"
-          class="bg-white pt-2 rounded-md shadow-md overflow-hidden"
-          :to="{ name: 'product-slug', params: { slug: product.slug } }"
+      <div class="font-rubik font-light grid gap-2 grid-cols-6 text-sm">
+        <NuxtLink v-for="product in data.data"
+                  :key="product.id"
+                  class="bg-white pt-2 rounded-md shadow-md overflow-hidden"
+                  :to="{ name: 'product-slug', params: { slug: product.slug } }"
         >
           <div class="flex space-x-3 px-3">
             <div class="font-medium">
@@ -128,13 +139,19 @@ watchDebounced(query.value, () => {
             </div>
             <div>{{ product.stockAmount }}</div>
           </div>
-          <NuxtImg
-            class="mt-2"
-            :src="product.image"
-            :placeholder="[200, 150, 75, 5]"
-            width="400"
-            height="300"
-            loading="lazy"
+          <div class="flex space-x-3 px-3">
+            <div class="font-medium">
+              Rating:
+            </div>
+            <div>{{ product.rating }}</div>
+          </div>
+          <NuxtImg class="mt-2 object-cover w-full"
+                   :src="product.image"
+                   :placeholder="[400, 250, 75, 25]"
+                   width="400"
+                   height="250"
+                   loading="lazy"
+                   decoding="async"
           />
         </NuxtLink>
       </div>

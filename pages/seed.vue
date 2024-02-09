@@ -42,23 +42,23 @@ const { execute: auth, status: authStatus, error: authError } = authController
 <template>
   <div class="grid place-items-center min-h-[calc(100vh-57px)] pb-14">
     <div class="relative m-auto w-full max-w-xs justify-center bg-navy-50 shadow-lg h-auto rounded-md px-6 py-4 pb-5">
-      <SharedButton
-        variant="link"
-        size="icon"
-        class="absolute top-5 left-3 bg-navy-50"
-        @click="authStatus === 'success' ? authStatus = 'idle' : navigateTo({ path: '/' })"
+      <SharedButton variant="link"
+                    size="icon"
+                    class="absolute top-5 left-3 bg-navy-50"
+                    @click="authStatus === 'success' ? authStatus = 'idle' : navigateTo({ path: '/' })"
       >
-        <Icon
-          name="lucide:arrow-left"
-          size="20"
-          class="text-navy-500"
+        <Icon name="lucide:arrow-left"
+              size="20"
+              class="text-navy-500"
         />
       </SharedButton>
       <h1 class="text-center font-nunito text-4xl font-semibold text-navy-900 mb-4">
         {{ $t('seedPage.title') }}
       </h1>
 
-      <Transition name="fade" mode="out-in">
+      <Transition name="fade"
+                  mode="out-in"
+      >
         <div v-if="authStatus === 'success'">
           <SharedSeparator class="mt-4 mb-4" />
           <div class="text-center leading-snug font-rubik">
@@ -68,58 +68,58 @@ const { execute: auth, status: authStatus, error: authError } = authController
           </div>
           <SharedSeparator class="mt-4 mb-4" />
           <div class="space-y-1.5">
-            <div
-              v-for="table in tables"
-              :key="table.name.value"
-              class="text-md flex justify-between items-center font-rubik"
+            <div v-for="table in tables"
+                 :key="table.name.value"
+                 class="text-md flex justify-between items-center font-rubik"
             >
               <span class="capitalize">{{ table.name.value }}</span>
 
-              <Icon
-                v-if="table.seeder.status.value === 'pending'"
-                name="fluent:spinner-ios-16-regular"
-                size="24"
-                class="text-navy-500 animate-spin"
+              <Icon v-if="table.seeder.status.value === 'pending'"
+                    name="fluent:spinner-ios-16-regular"
+                    size="24"
+                    class="text-navy-500 animate-spin"
               />
 
-              <Icon
-                v-else-if="table.seeder.status.value === 'success'"
-                name="lucide:check"
-                size="24"
-                class="text-navy-500"
+              <Icon v-else-if="table.seeder.status.value === 'success'"
+                    name="lucide:check"
+                    size="24"
+                    class="text-navy-500"
               />
 
-              <Icon
-                v-else-if="table.seeder.status.value === 'error'"
-                name="lucide:x"
-                size="24"
-                class="text-red-500"
+              <Icon v-else-if="table.seeder.status.value === 'error'"
+                    name="lucide:x"
+                    size="24"
+                    class="text-red-500"
               />
 
-              <Icon
-                v-else
-                name="lucide:minus"
-                size="24"
-                class="text-navy-500"
+              <Icon v-else
+                    name="lucide:minus"
+                    size="24"
+                    class="text-navy-500"
               />
             </div>
           </div>
 
           <div class="mt-4">
-            <SharedButton
-              v-if="someIdle || somePending"
-              class="w-full"
-              :disabled="somePending"
-              @click="seedAll"
+            <SharedButton v-if="someIdle || somePending"
+                          class="w-full"
+                          :disabled="somePending"
+                          @click="seedAll"
             >
               {{ somePending ? $t('seedPage.seed.button_pending') : $t('seedPage.seed.button_idle') }}
             </SharedButton>
 
-            <div v-else class="w-full min-h-[36px] grid place-items-center items-center text-center">
-              <div v-if="someHasErrors" class="text-red-700 font-mono">
+            <div v-else
+                 class="w-full min-h-[36px] grid place-items-center items-center text-center"
+            >
+              <div v-if="someHasErrors"
+                   class="text-red-700 font-mono"
+              >
                 ¯\_(ツ)_/¯
               </div>
-              <div v-else class="text-green-700 font-rubik">
+              <div v-else
+                   class="text-green-700 font-rubik"
+              >
                 {{ $t('seedPage.seed.button_complete') }}
               </div>
             </div>
@@ -136,42 +136,40 @@ const { execute: auth, status: authStatus, error: authError } = authController
             {{ $t('seedPage.auth.description_2') }}
           </div>
           <label class="relative my-5 block">
-            <SharedInput
-              v-model="secret"
-              :type="isPasswordVisible ? 'text' : 'password'"
-              class="font-rubik"
-              :error="authError !== null"
-              @input="authError = null"
-              @keyup.enter="auth"
+            <SharedInput v-model="secret"
+                         :type="isPasswordVisible ? 'text' : 'password'"
+                         class="font-rubik"
+                         :error="authError !== null"
+                         @input="authError = null"
+                         @keyup.enter="auth"
             />
-            <SharedButton
-              size="sm"
-              variant="link"
-              :class="cn(
-                'absolute top-1/2 -translate-y-1/2 right-0.5 cursor-pointer transition-all',
-                authError === null ? 'text-navy-900' : 'text-red-900',
-              )"
-              @click="isPasswordVisible = !isPasswordVisible"
+            <SharedButton size="sm"
+                          variant="link"
+                          :class="cn(
+                            'absolute top-1/2 -translate-y-1/2 right-0.5 cursor-pointer transition-all',
+                            authError === null ? 'text-navy-900' : 'text-red-900',
+                          )"
+                          @click="isPasswordVisible = !isPasswordVisible"
             >
-              <Icon
-                :name="isPasswordVisible ? 'lucide:eye-off' : 'lucide:eye'"
-                size="20"
+              <Icon :name="isPasswordVisible ? 'lucide:eye-off' : 'lucide:eye'"
+                    size="20"
               />
             </SharedButton>
-            <span
-              v-if="authError"
-              class="absolute w-full text-center top-full mt-0.5 text-sm leading-none text-red-700"
+            <span v-if="authError"
+                  class="absolute w-full text-center top-full mt-0.5 text-sm leading-none text-red-700"
             >
               {{ authError.data?.data.errors.secret ? authError.data.data.errors.secret[0] : authError.statusMessage }}
             </span>
           </label>
-          <SharedButton class="w-full" :disabled="authStatus === 'pending'" @click="auth">
+          <SharedButton class="w-full"
+                        :disabled="authStatus === 'pending'"
+                        @click="auth"
+          >
             <div>{{ authStatus === 'pending' ? $t('seedPage.auth.button_pending') : $t('seedPage.auth.button_idle') }}</div>
-            <Icon
-              v-if="authStatus === 'pending'"
-              name="fluent:spinner-ios-16-regular"
-              size="14"
-              class="text-white animate-spin ml-1"
+            <Icon v-if="authStatus === 'pending'"
+                  name="fluent:spinner-ios-16-regular"
+                  size="14"
+                  class="text-white animate-spin ml-1"
             />
           </SharedButton>
         </div>

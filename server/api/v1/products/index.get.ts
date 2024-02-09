@@ -50,7 +50,7 @@ export default cachedEventHandler(async (event) => {
 
   const colorIdsArray = Array.isArray(colorId) ? colorId : [colorId]
   const colorIds = colorIdsArray.filter((id): id is string => id !== 'undefined' && !Number.isNaN(Number(id))).map(Number)
-  const colorCondition = or(...colorIds.map(id => eq(schema.colorsOfProducts.colorId, id)))
+  const colorCondition = or(...colorIds.map(id => eq(schema.globalColorsOfProducts.globalColorId, id)))
 
   const sizeIdsArray = Array.isArray(sizeId) ? sizeId : [sizeId]
   const sizeIds = sizeIdsArray.filter((id): id is string => id !== 'undefined' && !Number.isNaN(Number(id))).map(Number)
@@ -62,8 +62,8 @@ export default cachedEventHandler(async (event) => {
   const maxPriceCcondition = priceMax ? or(lte(schema.products.fullPrice, priceMax), lte(schema.products.discountPrice, priceMax)) : undefined
 
   const colorSubquery = db
-    .select({ id: schema.colorsOfProducts.productId })
-    .from(schema.colorsOfProducts)
+    .select({ id: schema.globalColorsOfProducts.productId })
+    .from(schema.globalColorsOfProducts)
     .where(colorCondition)
 
   const sizeSubquery = db

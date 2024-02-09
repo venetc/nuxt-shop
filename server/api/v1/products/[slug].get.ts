@@ -2,6 +2,7 @@ import { getValidatedRouterParams } from 'h3'
 import { z } from 'zod'
 
 import { useDBClient } from '~/server/db/client'
+import { normalizeProductDetails } from '~/server/utils/productDTO'
 
 const slugSchema = z.object({ slug: z.string() })
 const db = useDBClient()
@@ -13,12 +14,15 @@ export default cachedEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Incorrect product slug' })
   }
 
-  const result = await db.query.products.findFirst({
+  const data = await db.query.products.findFirst({
     where: (entity, { eq }) => eq(entity.slug, validateResult.data.slug),
     with: {
-      colors: {
+      category: {
+        columns: { name: true, id: true },
+      },
+      globalColors: {
         columns: {},
-        with: { color: true },
+        with: { globalColor: true },
       },
       sizes: {
         columns: { stockAmount: true },
@@ -27,11 +31,11 @@ export default cachedEventHandler(async (event) => {
     },
   })
 
-  if (!result) {
+  if (!data) {
     throw createError({ statusCode: 404, statusMessage: 'Product not found' })
   }
 
-  return { data: result }
+  return normalizeProductDetails(data)
 }, {
   maxAge: 30, // 30 seconds
 })

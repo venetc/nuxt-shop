@@ -17,10 +17,9 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <Primitive
-    :as="as"
-    :asChild="asChild"
-    :class="cn(buttonVariants({ variant, size }), $attrs.class ?? '')"
+  <Primitive :as="as"
+             :asChild="asChild"
+             :class="cn(buttonVariants({ variant, size }), $attrs.class ?? '')"
   >
     <slot />
   </Primitive>
