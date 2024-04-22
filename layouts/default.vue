@@ -33,14 +33,28 @@ const setOpenState = (state: boolean) => isBurgerOpened.value = state
               </NuxtLink>
             </SharedDropdownMenuItem>
             <SharedDropdownMenuItem asChild>
-              <NuxtLink :to="{ name: 'product-slug', params: { slug: 'airmax-supreme-alpha' } }"
+              <NuxtLink :to="{ name: 'products-slug', params: { slug: 'airmax-supreme-alpha' } }"
                         class="cursor-pointer"
               >
                 Product
               </NuxtLink>
             </SharedDropdownMenuItem>
             <SharedDropdownMenuItem asChild>
-              <NuxtLink :to="{ name: 'product-slug', params: { slug: '1' } }"
+              <NuxtLink :to="{ name: 'categories' }"
+                        class="cursor-pointer"
+              >
+                Categories
+              </NuxtLink>
+            </SharedDropdownMenuItem>
+            <SharedDropdownMenuItem asChild>
+              <NuxtLink :to="{ name: 'categories-id', params: { id: 1 } }"
+                        class="cursor-pointer"
+              >
+                Concrete category
+              </NuxtLink>
+            </SharedDropdownMenuItem>
+            <SharedDropdownMenuItem asChild>
+              <NuxtLink :to="{ name: 'products-slug', params: { slug: '1' } }"
                         class="cursor-pointer"
               >
                 Wrong product

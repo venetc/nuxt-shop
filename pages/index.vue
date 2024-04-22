@@ -95,7 +95,7 @@ watchDebounced(query.value, () => {
         <NuxtLink v-for="product in data.data"
                   :key="product.id"
                   class="bg-white pt-2 rounded-md shadow-md overflow-hidden"
-                  :to="{ name: 'product-slug', params: { slug: product.slug } }"
+                  :to="{ name: 'products-slug', params: { slug: product.slug } }"
         >
           <div class="flex space-x-3 px-3">
             <div class="font-medium">
@@ -145,11 +145,11 @@ watchDebounced(query.value, () => {
             </div>
             <div>{{ product.rating }}</div>
           </div>
-          <NuxtImg class="mt-2 object-cover w-full"
+          <NuxtImg class="mt-2 object-cover w-full aspect-video"
                    :src="product.image"
-                   :placeholder="[400, 250, 75, 25]"
-                   width="400"
-                   height="250"
+                   placeholder
+                   width="300"
+                   height="170"
                    loading="lazy"
                    decoding="async"
           />
