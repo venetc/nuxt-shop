@@ -15,9 +15,8 @@ const classes = computed(() => ([
 </script>
 
 <template>
-  <div
-    class="font-nunito leading-none font-semibold"
-    :class="classes"
+  <div class="font-nunito leading-none font-semibold"
+       :class="classes"
   >
     {{ price }} &#8381;
   </div>

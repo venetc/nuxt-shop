@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { LocaleObject } from 'vue-i18n-routing'
+import type { LocaleObject } from '@nuxtjs/i18n'
 
 const { locales, setLocale } = useI18n()
 

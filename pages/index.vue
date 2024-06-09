@@ -21,7 +21,9 @@ const category = {
     return query.value.categoryId
   },
   transformSetter: (value: string | undefined) => {
-    if (!value) query.value.categoryId = undefined
+    if (!value) {
+      query.value.categoryId = undefined
+    }
     else if (!Array.isArray(value)) {
       const v = value.split(' ').filter(v => Boolean(v) && !Number.isNaN(+v))
       query.value.categoryId = v.length > 1 ? v : v[0]

@@ -15,8 +15,16 @@ const { data } = useFetch('/api/v1/sizes', {
 
 const sizes = computed(() => {
   if (!data.value) return []
+  const result = []
 
-  return data.value.sizes.map(size => ({ ...size, stockAmount: availableSizesMap.get(size.id)?.stockAmount ?? 0 }))
+  for (const size of data.value.sizes) {
+    const availableSize = availableSizesMap.get(size.id)
+    const stockAmount = availableSize?.stockAmount ?? 0
+
+    result.push({ ...size, stockAmount })
+  }
+
+  return result
 })
 
 const selectedSizeId = ref<number>()
